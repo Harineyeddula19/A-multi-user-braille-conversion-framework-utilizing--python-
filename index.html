@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+  <title>Braille Conversion</title>
+  <meta charset="utf-8">
+</head>
+<body>
+  <h2>Multi-user Braille Conversion</h2>
+  <input id="user" placeholder="Enter User ID">
+  <select id="mode">
+    <option>UEB</option>
+    <option>NEMETH</option>
+  </select>
+  <br><br>
+  <input id="bits" placeholder="Enter 6-bit braille (e.g., 100000)">
+  <button onclick="sendInput()">Send</button>
+  <pre id="output"></pre>
+
+  <script>
+    async function sendInput(){
+      const user = document.getElementById("user").value || "default";
+      const bits = document.getElementById("bits").value;
+      const mode = document.getElementById("mode").value;
+
+      let res = await fetch("/api/input", {
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({user_id:user, bits:bits, mode:mode})
+      });
+      let data = await res.json();
+      document.getElementById("output").textContent = data.full_text;
+    }
+  </script>
+</body>
+</html>
+
